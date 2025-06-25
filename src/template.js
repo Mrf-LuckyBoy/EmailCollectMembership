@@ -28,7 +28,7 @@ listGest.forEach(i => {
   const email = {
     body: {
       name: i.gestFullName,
-      intro: `${i.gestName} วันนี้ครบรอบรายเดือนครอบครับจ่ายค่าส่วนกลางด้วยยย`,
+      intro: `${i.gestName} ได้เวลาจ่ายเงินครอบครัวแล้ววว`,
       action: {
         instructions: 'จ่ายเงินได้ที่ QR นี้ได้เลย',
         button: {
