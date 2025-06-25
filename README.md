@@ -23,3 +23,4 @@ This is a simple Node.js project that sends automatic reminder emails to your fr
 ```bash
 git clone https://github.com/Mrf-LuckyBoy/EmailCollectMembership.git
 cd EmailCollectMembership
+```
