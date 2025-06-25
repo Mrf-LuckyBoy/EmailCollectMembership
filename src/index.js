@@ -2,7 +2,7 @@ import corn from 'node-cron';
 import { errorMonitor } from 'node:events';
 import sendMail from './mail.js';
 
-corn.schedule('* * * * *', async () => {
+corn.schedule('0 10 3 * *', async () => {
   try {
     const info = await sendMail();
     await Promise.all(
