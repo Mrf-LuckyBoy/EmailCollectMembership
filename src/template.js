@@ -49,7 +49,7 @@ listGest.forEach(i => {
         button: {
           color: '#22BC66',
           text: 'กดเพื่อดู QR',
-          link: 'https://cdn.discordapp.com/attachments/1341659114656235580/1382689002397765642/IMG_3766.jpg?ex=685c8bbb&is=685b3a3b&hm=5d622afa8610f5418f0f1d87f358ddb65eb853f0a36fd5ed28fa33010cd97d7a&',
+          link: process.env.IMAGE_LINK,
         },
       },
       outro: 'ถ้าโอนแล้วส่งสลิปใน line ได้เลย',
