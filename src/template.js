@@ -5,30 +5,30 @@ const listTemplate = [];
 dotenv.config();
 const listGest = [
   {
-    gestMail: process.env.GEST_MAIL_ONE,
-    gestName: process.env.GEST_ONE,
-    gestFullName: process.env.GEST_ONE_FULL_NAME,
+    gestMail: 'atsawa2001@gmail.com',
+    gestName: 'testtesttest',
+    gestFullName: 'test',
   },
-  {
-    gestMail: process.env.GEST_MAIL_TWO,
-    gestName: process.env.GEST_TWO,
-    gestFullName: process.env.GEST_TWO_FULL_NAME,
-  },
-  {
-    gestMail: process.env.GEST_MAIL_THREE,
-    gestName: process.env.GEST_THREE,
-    gestFullName: process.env.GEST_THREE_FULL_NAME,
-  },
-  {
-    gestMail: process.env.GEST_MAIL_FOUR,
-    gestName: process.env.GEST_FOUR,
-    gestFullName: process.env.GEST_FOUR_FULL_NAME,
-  },
-  {
-    gestMail: process.env.GEST_MAIL_FIVE,
-    gestName: process.env.GEST_FIVE,
-    gestFullName: process.env.GEST_FIVE_FULL_NAME,
-  },
+  // {
+  //   gestMail: process.env.GEST_MAIL_TWO,
+  //   gestName: process.env.GEST_TWO,
+  //   gestFullName: process.env.GEST_TWO_FULL_NAME,
+  // },
+  // {
+  //   gestMail: process.env.GEST_MAIL_THREE,
+  //   gestName: process.env.GEST_THREE,
+  //   gestFullName: process.env.GEST_THREE_FULL_NAME,
+  // },
+  // {
+  //   gestMail: process.env.GEST_MAIL_FOUR,
+  //   gestName: process.env.GEST_FOUR,
+  //   gestFullName: process.env.GEST_FOUR_FULL_NAME,
+  // },
+  // {
+  //   gestMail: process.env.GEST_MAIL_FIVE,
+  //   gestName: process.env.GEST_FIVE,
+  //   gestFullName: process.env.GEST_FIVE_FULL_NAME,
+  // },
 ];
 
 const mailGenerator = new Mailgen({
