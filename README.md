@@ -26,7 +26,7 @@ git clone https://github.com/Mrf-LuckyBoy/EmailCollectMembership.git
 cd EmailCollectMembership
 ```
 
-2. set Env
+2. Set Env:
 
 ```.env
 HOST_MAIL = yahoo@gmail.com
