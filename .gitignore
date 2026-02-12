@@ -57,3 +57,5 @@ dump.pm2
 
 # Docker
 docker-compose.override.yml
+
+/src/pkg/generated/prisma

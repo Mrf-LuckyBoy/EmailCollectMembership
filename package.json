@@ -3,10 +3,10 @@
   "type": "module",
   "version": "1.0.0",
   "description": "building a simple project that automatically sends email reminders to your friends to contribute to a shared YouTube membership.",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "test": "test",
-    "dev": "node src/index.js",
+    "test": "vitest",
+    "dev": "tsx src/index.ts",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -21,18 +21,31 @@
   },
   "homepage": "https://github.com/Mrf-LuckyBoy/EmailCollectMembership#readme",
   "dependencies": {
-    "axios": "^1.10.0",
-    "dotenv": "^16.5.0",
-    "mailgen": "^2.0.29",
+    "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
+    "@types/mailgen": "^2.0.7",
+    "axios": "^1.13.5",
+    "dotenv": "^16.6.1",
+    "mailgen": "^2.0.32",
     "node-cron": "^4.1.1",
-    "nodemailer": "^7.0.3"
+    "nodemailer": "^7.0.13",
+    "pg": "^8.18.0"
   },
   "devDependencies": {
+    "@types/node": "^25.2.3",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^7.0.9",
+    "@types/pg": "^8.16.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-prettier": "^5.5.0",
-    "prettier": "^3.6.0"
+    "prettier": "^3.6.0",
+    "prisma": "^7.4.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
   }
 }
