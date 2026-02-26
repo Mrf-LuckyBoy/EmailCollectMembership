@@ -40,11 +40,7 @@ describe('SendChargeEmail', () => {
       html: '<p>html</p>',
     });
 
-    const usecase = new SendChargeEmail(
-      residentRepoMock,
-      mailgenMock,
-      emailSenderMock
-    );
+    const usecase = new SendChargeEmail(residentRepoMock, mailgenMock, emailSenderMock);
 
     await usecase.execute();
 
@@ -57,11 +53,7 @@ describe('SendChargeEmail', () => {
   it('should not send anything when no users found', async () => {
     residentRepoMock.getAllResident.mockResolvedValue([]);
 
-    const usecase = new SendChargeEmail(
-      residentRepoMock,
-      mailgenMock,
-      emailSenderMock
-    );
+    const usecase = new SendChargeEmail(residentRepoMock, mailgenMock, emailSenderMock);
 
     await usecase.execute();
 
