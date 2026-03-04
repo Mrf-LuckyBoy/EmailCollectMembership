@@ -6,5 +6,17 @@ cron.schedule('* * 3 * *', async () => {
   await runChargeJob();
 });
 
-const app = buildApp();
-app.listen({ port: 3000 });
+const start = async () => {
+  const app = buildApp();
+
+  await app.listen({ port: 3000 });
+  console.log('Server running on port 3000');
+
+  return app;
+};
+
+// Start server and handle startup errors
+start().catch((err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
+});
