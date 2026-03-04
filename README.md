@@ -16,6 +16,7 @@ This is a simple Node.js project that sends automatic reminder emails to your fr
 - Nodemailer (for sending emails)
 - node-cron (for scheduling tasks)
 - dotenv (for environment variables)
+- prisma (for orm database for collect data)
 
 ## 📦 Installation
 
@@ -35,7 +36,6 @@ IMAGE_LINK = image link on drive or other
 chat_id_tele = chatIdTelegram
 chat_bot_tele = botKeyTelegram
 domain_tele = https://api.telegram.org
-GEST_ONE = gest
-GEST_MAIL_ONE = gest@gmail.com
-GEST_ONE_FULL_NAME = gest gest
+DATABASE_URL = url-connect-db
 ```
+
