@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client"
-  output = "../src/pkg/generated"
+  output   = "../src/pkg/generated"
 }
 
 datasource db {
@@ -14,14 +14,26 @@ datasource db {
 }
 
 model Resident {
-  id String @id @default(uuid())
-  f_name String?
-  l_name String?
-  n_name String?
-  email String @unique
-  sex Sex
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String    @id @default(uuid())
+  f_name     String?
+  l_name     String?
+  n_name     String?
+  email      String    @unique
+  sex        Sex
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  logpaid    LogPaid[]
+}
+
+model LogPaid {
+  id          String   @id @default(uuid())
+  resident_id String
+  paid_at     DateTime
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  resident    Resident @relation(fields: [resident_id], references: [id])
+
+  @@index([resident_id, paid_at])
 }
 
 enum Sex {
