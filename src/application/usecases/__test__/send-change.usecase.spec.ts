@@ -11,6 +11,7 @@ vi.mock('../../../infrastructure/thirdparty/telegram.client', () => ({
 describe('SendChargeEmail', () => {
   const residentRepoMock = {
     getAllResident: vi.fn(),
+    getAllResidentUnpaid: vi.fn(),
   };
 
   const mailgenMock = {
@@ -27,6 +28,14 @@ describe('SendChargeEmail', () => {
 
   it('should send email and telegram message for each user', async () => {
     residentRepoMock.getAllResident.mockResolvedValue([
+      {
+        residentFullName: 'John Doe',
+        residentName: 'JD',
+        residentMail: 'john@test.com',
+      },
+    ]);
+
+    residentRepoMock.getAllResidentUnpaid.mockResolvedValue([
       {
         residentFullName: 'John Doe',
         residentName: 'JD',

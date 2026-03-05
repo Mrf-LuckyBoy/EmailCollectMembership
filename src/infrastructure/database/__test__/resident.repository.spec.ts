@@ -68,11 +68,9 @@ describe('ResidentRepository', () => {
 
       expect(result).toEqual([]);
     });
-
-  })
+  });
 
   describe('getAllResidentUnpaid', () => {
-
     beforeEach(() => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2026-03-15T10:00:00Z'));
@@ -80,7 +78,7 @@ describe('ResidentRepository', () => {
 
     afterEach(() => {
       vi.useRealTimers();
-    })
+    });
 
     it('should call prisma with correct date range', async () => {
       (prismaMock.resident!.findMany as any).mockResolvedValue([]);
@@ -93,7 +91,7 @@ describe('ResidentRepository', () => {
             none: {
               paid_at: {
                 gte: new Date(2026, 2, 1), // March
-                lt: new Date(2026, 3, 1),  // April
+                lt: new Date(2026, 3, 1), // April
               },
             },
           },
@@ -149,6 +147,6 @@ describe('ResidentRepository', () => {
       const result = await repository.getAllResidentUnpaid();
 
       expect(result).toEqual([]);
-    })
-  })
+    });
+  });
 });

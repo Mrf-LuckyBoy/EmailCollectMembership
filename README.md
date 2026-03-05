@@ -38,4 +38,3 @@ chat_bot_tele = botKeyTelegram
 domain_tele = https://api.telegram.org
 DATABASE_URL = url-connect-db
 ```
-

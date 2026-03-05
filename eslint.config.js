@@ -1,6 +1,6 @@
-import js from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import prettier from 'eslint-config-prettier'
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import prettier from 'eslint-config-prettier';
 
 export default [
   // ✅ Ignore non-source files
@@ -49,4 +49,4 @@ export default [
   },
 
   prettier,
-]
+];
