@@ -8,7 +8,7 @@ export class SendChargeEmail {
     private readonly ResidentRepo: ResidentRepositoryPort,
     private readonly emailTemplate: MailgenPort,
     private readonly emailSender: EmailSenderPort
-  ) { }
+  ) {}
 
   async execute(): Promise<void> {
     const users = await this.ResidentRepo.getAllResident();

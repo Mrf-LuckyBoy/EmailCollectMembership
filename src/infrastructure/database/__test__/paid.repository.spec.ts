@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { PaidRepository } from '../paid.repository.js'
-import type { PrismaClient } from '../../../pkg/generated/client.js'
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { PaidRepository } from '../paid.repository.js';
+import type { PrismaClient } from '../../../pkg/generated/client.js';
 import type { PaidPayload } from '../../../domain/paid.dto.js';
 
 describe('PaidRepository', () => {
@@ -23,7 +23,7 @@ describe('PaidRepository', () => {
       paid_at: '2026-03-01',
     };
 
-    await repository.createPaidLog(payload)
+    await repository.createPaidLog(payload);
 
     expect(prismaMock.logPaid?.create).toHaveBeenCalledTimes(1);
     expect(prismaMock.logPaid?.create).toHaveBeenCalledWith({
@@ -31,12 +31,12 @@ describe('PaidRepository', () => {
         paid_at: new Date(payload.paid_at),
         resident: {
           connect: {
-            id: payload.resident_id
-          }
-        }
-      }
-    })
-  })
+            id: payload.resident_id,
+          },
+        },
+      },
+    });
+  });
 
   it('if invalid paid_at', async () => {
     const payload: PaidPayload = {
@@ -45,5 +45,4 @@ describe('PaidRepository', () => {
     };
     await expect(repository.createPaidLog(payload)).rejects.toThrow('Invalid paid_at date');
   });
-
-})
+});
