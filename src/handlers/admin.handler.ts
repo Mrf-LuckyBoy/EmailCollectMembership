@@ -5,7 +5,7 @@ import { BaseResponse } from '../domain/baseResponse.dto.js';
 import type { LogPaid } from '../domain/paid.model.js';
 
 export class AdminHandler {
-  constructor(private adminUseCase: AdminUsecase) { }
+  constructor(private adminUseCase: AdminUsecase) {}
 
   async createPaidLog(request: FastifyRequest<{ Body: PaidPayload }>, reply: FastifyReply) {
     try {
