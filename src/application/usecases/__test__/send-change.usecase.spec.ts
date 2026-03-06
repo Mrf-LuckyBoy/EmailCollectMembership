@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SendChargeEmail } from '../send-change.usecase.js';
+import { SendEmail } from '../send-mail.usecase.js';
 import { TelegramAPI } from '../../../infrastructure/thirdparty/telegram.client.js';
 
 vi.mock('../../../infrastructure/thirdparty/telegram.client', () => ({
@@ -16,6 +16,7 @@ describe('SendChargeEmail', () => {
 
   const mailgenMock = {
     generateChangeEmail: vi.fn(),
+    generateFollowUpEmail: vi.fn(),
   };
 
   const emailSenderMock = {
@@ -26,48 +27,87 @@ describe('SendChargeEmail', () => {
     vi.clearAllMocks();
   });
 
-  it('should send email and telegram message for each user', async () => {
-    residentRepoMock.getAllResident.mockResolvedValue([
-      {
-        residentFullName: 'John Doe',
-        residentName: 'JD',
-        residentMail: 'john@test.com',
-      },
-    ]);
+  describe('SendChargeMail', () => {
+    it('should send email and telegram message for each user', async () => {
+      residentRepoMock.getAllResident.mockResolvedValue([
+        {
+          residentFullName: 'John Doe',
+          residentName: 'JD',
+          residentMail: 'john@test.com',
+        },
+      ]);
 
-    residentRepoMock.getAllResidentUnpaid.mockResolvedValue([
-      {
-        residentFullName: 'John Doe',
-        residentName: 'JD',
-        residentMail: 'john@test.com',
-      },
-    ]);
+      mailgenMock.generateChangeEmail.mockReturnValue({
+        sendTo: 'john@test.com',
+        text: 'text content',
+        html: '<p>html</p>',
+      });
 
-    mailgenMock.generateChangeEmail.mockReturnValue({
-      sendTo: 'john@test.com',
-      text: 'text content',
-      html: '<p>html</p>',
+      mailgenMock.generateFollowUpEmail.mockReturnValue({
+        sendTo: 'john@test.com',
+        text: 'text content',
+        html: '<p>html</p>',
+      });
+
+      const usecase = new SendEmail(residentRepoMock, mailgenMock, emailSenderMock);
+
+      await usecase.execute();
+
+      expect(residentRepoMock.getAllResident).toHaveBeenCalledTimes(1);
+      expect(mailgenMock.generateChangeEmail).toHaveBeenCalledTimes(1);
+      expect(emailSenderMock.send).toHaveBeenCalledTimes(1);
+      expect(TelegramAPI.sendMessage).toHaveBeenCalledTimes(1);
     });
 
-    const usecase = new SendChargeEmail(residentRepoMock, mailgenMock, emailSenderMock);
+    it('should not send anything when no users found', async () => {
+      residentRepoMock.getAllResident.mockResolvedValue([]);
 
-    await usecase.execute();
+      const usecase = new SendEmail(residentRepoMock, mailgenMock, emailSenderMock);
 
-    expect(residentRepoMock.getAllResident).toHaveBeenCalledTimes(1);
-    expect(mailgenMock.generateChangeEmail).toHaveBeenCalledTimes(1);
-    expect(emailSenderMock.send).toHaveBeenCalledTimes(1);
-    expect(TelegramAPI.sendMessage).toHaveBeenCalledTimes(1);
+      await usecase.execute();
+
+      expect(mailgenMock.generateChangeEmail).not.toHaveBeenCalled();
+      expect(emailSenderMock.send).not.toHaveBeenCalled();
+      expect(TelegramAPI.sendMessage).not.toHaveBeenCalled();
+    });
   });
 
-  it('should not send anything when no users found', async () => {
-    residentRepoMock.getAllResident.mockResolvedValue([]);
+  describe('SendEmailFollowUp', () => {
+    it('should send email and telegram message for each user', async () => {
+      residentRepoMock.getAllResidentUnpaid.mockResolvedValue([
+        {
+          residentFullName: 'John Doe',
+          residentName: 'JD',
+          residentMail: 'john@test.com',
+        },
+      ]);
 
-    const usecase = new SendChargeEmail(residentRepoMock, mailgenMock, emailSenderMock);
+      mailgenMock.generateFollowUpEmail.mockReturnValue({
+        sendTo: 'john@test.com',
+        text: 'text content',
+        html: '<p>html</p>',
+      });
 
-    await usecase.execute();
+      const usecase = new SendEmail(residentRepoMock, mailgenMock, emailSenderMock);
 
-    expect(mailgenMock.generateChangeEmail).not.toHaveBeenCalled();
-    expect(emailSenderMock.send).not.toHaveBeenCalled();
-    expect(TelegramAPI.sendMessage).not.toHaveBeenCalled();
+      await usecase.followUp();
+
+      expect(residentRepoMock.getAllResidentUnpaid).toHaveBeenCalledTimes(1);
+      expect(mailgenMock.generateFollowUpEmail).toHaveBeenCalledTimes(1);
+      expect(emailSenderMock.send).toHaveBeenCalledTimes(1);
+      expect(TelegramAPI.sendMessage).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not send anything when no users found', async () => {
+      residentRepoMock.getAllResidentUnpaid.mockResolvedValue([]);
+
+      const usecase = new SendEmail(residentRepoMock, mailgenMock, emailSenderMock);
+
+      await usecase.execute();
+
+      expect(mailgenMock.generateFollowUpEmail).not.toHaveBeenCalled();
+      expect(emailSenderMock.send).not.toHaveBeenCalled();
+      expect(TelegramAPI.sendMessage).not.toHaveBeenCalled();
+    });
   });
 });
