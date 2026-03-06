@@ -6,4 +6,9 @@ export interface MailgenPort {
     text: string;
     html: string;
   };
+  generateFollowUpEmail(data: Resident): {
+    sendTo: string;
+    text: string;
+    html: string;
+  };
 }

@@ -5,7 +5,9 @@ import { prisma } from '../infrastructure/database/prisma.client.js';
 import { AdminUsecase } from '../application/usecases/admin.usecase.js';
 
 async function mainRoutes(app: FastifyInstance) {
+  // usercase
   const adminUsecase = new AdminUsecase(new PaidRepository(prisma));
+  // handler
   const handler = new AdminHandler(adminUsecase);
 
   app.register(

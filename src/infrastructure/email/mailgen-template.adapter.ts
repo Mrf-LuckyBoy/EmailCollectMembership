@@ -40,4 +40,28 @@ export class MailgenTemplateAdapter implements MailgenPort {
       html: this.mailgen.generate(email),
     };
   }
+
+  generateFollowUpEmail(data: Resident): { sendTo: string; text: string; html: string } {
+    const email = {
+      body: {
+        name: data.residentFullName,
+        intro: `${data.residentName} จ่ายตังค์ด้วยๆ เตือนครั้งที่ 1`,
+        action: {
+          instructions: 'จ่ายเงินได้ที่ QR นี้ได้เลย',
+          button: {
+            color: '#22BC66',
+            text: 'กดเพื่อดู QR',
+            link: ProjectConfig.ImgLink,
+          },
+        },
+        outro: 'อย่าให้มีครั้งที่ 2',
+      },
+    };
+
+    return {
+      sendTo: data.residentMail,
+      text: this.mailgen.generatePlaintext(email),
+      html: this.mailgen.generate(email),
+    };
+  }
 }
