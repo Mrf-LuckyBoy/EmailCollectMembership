@@ -4,6 +4,7 @@ This is a simple Node.js project that sends automatic reminder emails to your fr
 
 ## ✨ Features
 
+- 🔌 Api for manage data for send mail 
 - 📧 Sends email reminders via SMTP (Gmail, Outlook, etc.)
 - 📆 Can be scheduled to run monthly using a cron job
 - 👤 Personalizes messages for each friend
@@ -17,6 +18,9 @@ This is a simple Node.js project that sends automatic reminder emails to your fr
 - node-cron (for scheduling tasks)
 - dotenv (for environment variables)
 - prisma (for orm database for collect data)
+- fastify (for api service)
+- postgresql (database)
+- githubAction (CICD)
 
 ## 📦 Installation
 
