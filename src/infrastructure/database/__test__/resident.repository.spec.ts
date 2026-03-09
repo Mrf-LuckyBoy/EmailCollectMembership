@@ -10,6 +10,7 @@ describe('ResidentRepository', () => {
     prismaMock = {
       resident: {
         findMany: vi.fn(),
+        findFirst: vi.fn(),
       },
     } as any;
 
@@ -147,6 +148,99 @@ describe('ResidentRepository', () => {
       const result = await repository.getAllResidentUnpaid();
 
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('getResidentByid', () => {
+    it('should return resident when found', async () => {
+      (prismaMock.resident!.findFirst as any).mockResolvedValue({
+        f_name: 'John',
+        l_name: 'Doe',
+        n_name: 'JD',
+        email: 'john@mail.com',
+      });
+
+      const result = await repository.getResidentByid('12345');
+
+      expect(result).toEqual({
+        residentFullName: 'John Doe',
+        residentName: 'JD',
+        residentMail: 'john@mail.com',
+      });
+
+      expect(prismaMock.resident?.findFirst).toHaveBeenCalledWith({
+        select: {
+          f_name: true,
+          l_name: true,
+          n_name: true,
+          email: true,
+        },
+        where: {
+          id: '12345',
+        },
+      });
+    });
+
+    it('should throw error when resident not found ', async () => {
+      (prismaMock.resident!.findFirst as any).mockResolvedValue(null);
+
+      await expect(repository.getResidentByid('12345')).rejects.toThrow('Resident not found');
+    });
+
+    it('case n_name in db equal null', async () => {
+      (prismaMock.resident!.findFirst as any).mockResolvedValue({
+        f_name: 'Jane',
+        l_name: 'Smith',
+        n_name: null, // branch two
+        email: 'jane@test.com',
+      });
+
+      const result = await repository.getResidentByid('12345');
+
+      expect(result).toEqual({
+        residentFullName: 'Jane Smith',
+        residentName: '', // branch 2
+        residentMail: 'jane@test.com',
+      });
+      expect(prismaMock.resident?.findFirst).toHaveBeenCalledWith({
+        select: {
+          f_name: true,
+          l_name: true,
+          n_name: true,
+          email: true,
+        },
+        where: {
+          id: '12345',
+        },
+      });
+    });
+
+    it('case f_name and l_name can be null', async () => {
+      (prismaMock.resident!.findFirst as any).mockResolvedValue({
+        f_name: null,
+        l_name: null,
+        n_name: 'janney',
+        email: 'jane@test.com',
+      });
+
+      const result = await repository.getResidentByid('12345');
+
+      expect(result).toEqual({
+        residentFullName: ' ',
+        residentName: 'janney', // branch 2
+        residentMail: 'jane@test.com',
+      });
+      expect(prismaMock.resident?.findFirst).toHaveBeenCalledWith({
+        select: {
+          f_name: true,
+          l_name: true,
+          n_name: true,
+          email: true,
+        },
+        where: {
+          id: '12345',
+        },
+      });
     });
   });
 });

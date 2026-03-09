@@ -12,6 +12,7 @@ describe('SendChargeEmail', () => {
   const residentRepoMock = {
     getAllResident: vi.fn(),
     getAllResidentUnpaid: vi.fn(),
+    getResidentByid: vi.fn(),
   };
 
   const mailgenMock = {

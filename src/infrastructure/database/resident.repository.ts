@@ -15,7 +15,7 @@ export class ResidentRepository implements ResidentRepositoryPort {
       },
     });
 
-    const result = resident.map(r => ({
+    const result: Resident[] = resident.map(r => ({
       residentFullName: `${r.f_name} ${r.l_name}`,
       residentName: r.n_name ?? '',
       residentMail: r.email,
@@ -42,12 +42,37 @@ export class ResidentRepository implements ResidentRepositoryPort {
       },
     });
 
-    const result = unpaidResidents.map(r => ({
+    const result: Resident[] = unpaidResidents.map(r => ({
       residentFullName: `${r.f_name} ${r.l_name}`,
       residentName: r.n_name ?? '',
       residentMail: r.email,
     }));
 
     return result;
+  }
+
+  async getResidentByid(residentID: string): Promise<Resident> {
+    const resident = await this.prisma.resident.findFirst({
+      select: {
+        f_name: true,
+        l_name: true,
+        n_name: true,
+        email: true,
+      },
+      where: {
+        id: residentID,
+      },
+    });
+
+    if (!resident) {
+      throw new Error('Resident not found');
+    } else {
+      const result: Resident = {
+        residentFullName: (resident.f_name ?? '') + ' ' + (resident.l_name ?? ''),
+        residentName: resident.n_name || '',
+        residentMail: resident.email,
+      };
+      return result;
+    }
   }
 }
