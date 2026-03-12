@@ -2,7 +2,7 @@ name: CD Pipeline
 
 on:
   workflow_run:
-    workflows: ["CI Pipleine"]
+    workflows: ["CI Pipeline"]
     branches: [main]
     types: [completed]
 
@@ -12,8 +12,8 @@ env:
 
 jobs:
   build-and-push:
-    run-on: ubuntu-latest
-    if: ${{ github.event.workflows_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
   steps:
     - name: Checkout
