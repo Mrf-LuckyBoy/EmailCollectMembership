@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: registry.atsawa.dev
-  IMAGE_NAME: myapp
+  IMAGE_NAME: emailservice
 
 jobs:
   build-and-push:
