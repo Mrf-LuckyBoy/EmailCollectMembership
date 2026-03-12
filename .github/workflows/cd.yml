@@ -47,11 +47,31 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-  # deploy:
-  #   needs: build-and-push
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Install cloudflared
-  #       ...
-  #     - name: Deploy via SSH
-  #       ...
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install cloudflared
+        run: |
+          curl -L https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main" | sudo tee /etc/apt/sources.list.d/cloudflared.list
+          sudo apt update && sudo apt install cloudflared -y
+
+      - name: Deploy via SSH to Raspberry Pi
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PI_HOST }}
+          username: ${{ secrets.PI_USER }}
+          key: ${{ secrets.PI_SSH_KEY }}
+          proxy_command: cloudflared access ssh --hostname %h
+          script: |
+            echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.atsawa.dev -u ${{ secrets.REGISTRY_USER }} --password-stdin
+            docker pull registry.atsawa.dev/emailservice:latest
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d \
+              --name myapp \
+              --restart=always \
+              -p 8080:8080 \
+              registry.atsawa.dev/emailservice:latest
