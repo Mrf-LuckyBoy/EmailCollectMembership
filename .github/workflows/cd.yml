@@ -1,0 +1,32 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI Pipleine"]
+    branches: [main]
+    types: [completed]
+
+env:
+  REGISTRY: registry.atsawa.dev
+  IMAGE_NAME: emailservice
+
+jobs:
+  build-and-push:
+    run-on: ubuntu-latest
+    if: ${{ github.event.workflows_run.conclusion == 'success' }}
+
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.workflow_run.head_sha }}
+
+    - name: Set up QEMU (for ARM64 builds)
+      uses: docker/setup-qemu-action@v3
+      with:
+        platforms: linux/arm64
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+
