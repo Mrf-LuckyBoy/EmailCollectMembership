@@ -84,7 +84,7 @@ jobs:
             docker run -d \
               --name emailservice \
               --restart=always \
-              -p 3000:3000 \
+              -p 4000:4000 \
               registry.atsawa.dev/emailservice:latest
   # deploy:
   #   needs: build-and-push
