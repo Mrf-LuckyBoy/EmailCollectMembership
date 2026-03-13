@@ -52,11 +52,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install cloudflared
+      - name: Setup WireGuard
         run: |
-          curl -L https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg > /dev/null
-          echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main" | sudo tee /etc/apt/sources.list.d/cloudflared.list
-          sudo apt update && sudo apt install cloudflared -y
+          sudo apt install wireguard -y
+          echo "${{ secrets.WG_PRIVATE_KEY }}" > /tmp/private.key
+          chmod 600 /tmp/private.key
+          sudo ip link add wg0 type wireguard
+          sudo ip addr add 10.8.0.6/24 dev wg0
+          sudo wg set wg0 \
+            private-key /tmp/private.key \
+            peer ${{ secrets.WG_SERVER_PUBLIC_KEY }} \
+            endpoint ${{ secrets.WG_SERVER_ENDPOINT }} \
+            allowed-ips 10.8.0.0/24 \
+            persistent-keepalive 25
+          sudo ip link set wg0 up
+          sleep 3
+          ping -c 3 ${{ secrets.PI_HOST }}
 
       - name: Deploy via SSH to Raspberry Pi
         uses: appleboy/ssh-action@v1
@@ -64,14 +75,42 @@ jobs:
           host: ${{ secrets.PI_HOST }}
           username: ${{ secrets.PI_USER }}
           key: ${{ secrets.PI_SSH_KEY }}
-          proxy_command: cloudflared access ssh --hostname %h
           script: |
-            echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.atsawa.dev -u ${{ secrets.REGISTRY_USER }} --password-stdin
+            echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.atsawa.dev \
+              -u ${{ secrets.REGISTRY_USER }} --password-stdin
             docker pull registry.atsawa.dev/emailservice:latest
-            docker stop myapp || true
-            docker rm myapp || true
+            docker stop emailservice || true
+            docker rm emailservice || true
             docker run -d \
-              --name myapp \
+              --name emailservice \
               --restart=always \
-              -p 8080:8080 \
+              -p 3000:3000 \
               registry.atsawa.dev/emailservice:latest
+  # deploy:
+  #   needs: build-and-push
+  #   runs-on: ubuntu-latest
+  #
+  #   steps:
+  #     - name: Install cloudflared
+  #       run: |
+  #         curl -L https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg > /dev/null
+  #         echo "deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared any main" | sudo tee /etc/apt/sources.list.d/cloudflared.list
+  #         sudo apt update && sudo apt install cloudflared -y
+  #
+  #     - name: Deploy via SSH to Raspberry Pi
+  #       uses: appleboy/ssh-action@v1
+  #       with:
+  #         host: ${{ secrets.PI_HOST }}
+  #         username: ${{ secrets.PI_USER }}
+  #         key: ${{ secrets.PI_SSH_KEY }}
+  #         proxy_command: cloudflared access ssh --hostname %h
+  #         script: |
+  #           echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.atsawa.dev -u ${{ secrets.REGISTRY_USER }} --password-stdin
+  #           docker pull registry.atsawa.dev/emailservice:latest
+  #           docker stop myapp || true
+  #           docker rm myapp || true
+  #           docker run -d \
+  #             --name myapp \
+  #             --restart=always \
+  #             -p 8080:8080 \
+  #             registry.atsawa.dev/myapp:latest
