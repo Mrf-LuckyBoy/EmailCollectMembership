@@ -11,7 +11,7 @@ export class SendEmail {
   ) { }
 
   async execute(): Promise<void> {
-    const users = await this.ResidentRepo.getAllResidentUnpaid();
+    const users = await this.ResidentRepo.getAllResident();
 
     for (const user of users) {
       const { sendTo, text, html } = this.emailTemplate.generateChangeEmail(user);
