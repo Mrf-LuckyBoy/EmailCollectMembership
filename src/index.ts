@@ -3,7 +3,7 @@ import { runChargeJob } from './jobs/charge.job.js';
 import { runFollowUpJob } from './jobs/follow-up.job.js';
 import { buildApp } from './app.js';
 
-cron.schedule('* * 3 * *', async () => {
+cron.schedule('0 0 3 * *', async () => {
   console.info('Running follow job...');
   console.log('test run cronjob charge mail');
   await runChargeJob();
