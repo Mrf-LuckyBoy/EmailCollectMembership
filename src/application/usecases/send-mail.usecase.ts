@@ -8,10 +8,10 @@ export class SendEmail {
     private readonly ResidentRepo: ResidentRepositoryPort,
     private readonly emailTemplate: MailgenPort,
     private readonly emailSender: EmailSenderPort
-  ) {}
+  ) { }
 
   async execute(): Promise<void> {
-    const users = await this.ResidentRepo.getAllResident();
+    const users = await this.ResidentRepo.getAllResidentUnpaid();
 
     for (const user of users) {
       const { sendTo, text, html } = this.emailTemplate.generateChangeEmail(user);
