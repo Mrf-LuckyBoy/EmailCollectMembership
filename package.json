@@ -14,8 +14,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "postinstall": "prisma generate",
-    "migrate:deploy": "prisma migrate deploy"
+    "postinstall": "prisma generate"
   },
   "repository": {
     "type": "git",
