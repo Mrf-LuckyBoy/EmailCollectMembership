@@ -9,7 +9,7 @@ cron.schedule('0 0 3 * *', async () => {
   await runChargeJob();
 });
 
-cron.schedule('0 0 */3 * *', async () => {
+cron.schedule('0 0 */10 * *', async () => {
   console.info('Running followUP job...');
   await runFollowUpJob();
 });
