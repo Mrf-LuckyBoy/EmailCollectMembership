@@ -84,7 +84,7 @@ jobs:
             echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.atsawa.dev \
               -u ${{ secrets.REGISTRY_USER }} --password-stdin
             docker pull registry.atsawa.dev/emailservice:latest
-
+            
             docker run --rm \
               --env-file /home/${{ secrets.PI_USER }}/emailservice/.env \
               registry.atsawa.dev/emailservice:latest \
@@ -95,6 +95,7 @@ jobs:
             docker run -d \
               --name emailservice \
               --restart=always \
+              --network appnetwork \
               -p 3000:3000 \
               --env-file /home/${{ secrets.PI_USER }}/emailservice/.env \
               registry.atsawa.dev/emailservice:latest
