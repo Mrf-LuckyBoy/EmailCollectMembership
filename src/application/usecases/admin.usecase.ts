@@ -12,7 +12,7 @@ export class AdminUsecase {
     private readonly emailTemplate: MailgenPort,
     private readonly emailSender: EmailSenderPort,
     private readonly ResidentRepo: ResidentRepositoryPort
-  ) {}
+  ) { }
 
   async createLogPaid(input: PaidPayload): Promise<LogPaid> {
     const result = await this.PaidRepo.createPaidLog(input);
