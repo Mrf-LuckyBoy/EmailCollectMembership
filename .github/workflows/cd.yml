@@ -75,21 +75,26 @@ jobs:
           host: ${{ secrets.PI_HOST }}
           username: ${{ secrets.PI_USER }}
           key: ${{ secrets.PI_SSH_KEY }}
-          envs: ENV_FILE
           script: |
+            # Write env file
+            mkdir -p /home/atsawa/emailservice
+            echo '${{ secrets.ENV_FILE }}' > /home/atsawa/emailservice/.env
 
-            mkdir -p /home/${{ secrets.PI_USER }}/emailservice
-            echo "$ENV_FILE" > /home/${{ secrets.PI_USER }}/emailservice/.env
-
-            echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.atsawa.dev \
+            # Login to registry
+            echo '${{ secrets.REGISTRY_PASSWORD }}' | docker login registry.atsawa.dev \
               -u ${{ secrets.REGISTRY_USER }} --password-stdin
+
+            # Pull new image first (while old container still running)
             docker pull registry.atsawa.dev/emailservice:latest
-            
+
+            # Run DB migrations
             docker run --rm \
-              --env-file /home/${{ secrets.PI_USER }}/emailservice/.env \
+              --network appnetwork \
+              --env-file /home/atsawa/emailservice/.env \
               registry.atsawa.dev/emailservice:latest \
               npm run migrate:deploy
 
+            # Swap container
             docker stop emailservice || true
             docker rm emailservice || true
             docker run -d \
@@ -97,5 +102,8 @@ jobs:
               --restart=always \
               --network appnetwork \
               -p 3000:3000 \
-              --env-file /home/${{ secrets.PI_USER }}/emailservice/.env \
+              --env-file /home/atsawa/emailservice/.env \
               registry.atsawa.dev/emailservice:latest
+
+            # Verify running
+            docker ps | grep emailservice
