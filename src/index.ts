@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import { runChargeJob } from './jobs/charge.job.js';
-import { runFollowUpJob } from './jobs/follow-up.job.js';
+// import { runFollowUpJob } from './jobs/follow-up.job.js';
 import { buildApp } from './app.js';
 
 cron.schedule('0 0 3 * *', async () => {
@@ -9,10 +9,10 @@ cron.schedule('0 0 3 * *', async () => {
   await runChargeJob();
 });
 
-cron.schedule('0 0 */10 * *', async () => {
-  console.info('Running followUP job...');
-  await runFollowUpJob();
-});
+// cron.schedule('0 0 */10 * *', async () => {
+//   console.info('Running followUP job...');
+//   await runFollowUpJob();
+// });
 
 const start = async () => {
   const app = await buildApp();
