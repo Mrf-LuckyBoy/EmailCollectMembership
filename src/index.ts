@@ -5,14 +5,10 @@ import { buildApp } from './app.js';
 
 cron.schedule('0 0 3 * *', async () => {
   console.info('Running follow job...');
-  console.log('test run cronjob charge mail');
+  console.log('run cronjob charge mail');
   await runChargeJob();
 });
 
-// cron.schedule('0 0 */10 * *', async () => {
-//   console.info('Running followUP job...');
-//   await runFollowUpJob();
-// });
 
 const start = async () => {
   const app = await buildApp();
